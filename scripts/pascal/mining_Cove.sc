@@ -271,7 +271,7 @@ begin
                 Finded := True;
               end;
 
-              if InJournalBetweenTimes('Try mining elsewhere|nothing here to mine|Iron Ore|Copper Ore|Bronze Ore', StartTime, Now) > 0 then begin
+              if InJournalBetweenTimes('Try mining elsewhere|You cannot mine|nothing here to mine|Iron Ore|Copper Ore|Bronze Ore', StartTime, Now) > 0 then begin
                 Empty := True;
                 Finded := True;
               end; 
