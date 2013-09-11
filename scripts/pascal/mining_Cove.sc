@@ -34,9 +34,9 @@ begin
      Tool := MiningTypes[CurTool];
      FindType(Tool, Backpack);
      MiningTool := FindItem;
-     Result := FindCount > 0;
      break;
-  end
+  end;
+  Result := FindCount > 0;
 end;
 
 procedure SmellOre;
