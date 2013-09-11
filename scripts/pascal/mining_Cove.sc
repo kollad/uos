@@ -32,9 +32,9 @@ begin
   CheckLag(LagWait);
   for CurTool := 0 to Length(MiningTypes) -1 do begin
      Tool := MiningTypes[CurTool];
-     FindType(Tool, Backpack);
-     MiningTool := FindItem;
-     break;
+     if FindType(Tool, Backpack):
+       MiningTool := FindItem;
+       break;
   end;
   Result := FindCount > 0;
 end;
