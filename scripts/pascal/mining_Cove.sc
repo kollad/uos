@@ -30,7 +30,7 @@ var
   Tool: Cardinal;
 begin
   CheckLag(LagWait);
-  for CurTool := 0 to Length(MiningType) -1 do begin
+  for CurTool := 0 to Length(MiningTypes) -1 do begin
      Tool = MiningTypes[CurTool];
      FindType(Tool, Backpack);
      MiningTool := FindItem;
