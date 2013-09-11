@@ -9,7 +9,7 @@ const
   IngotsStorage = $4003EC5A;
   IngotsType = $1BF2;
   
-  MiningType = $0E85;
+  MiningTypes = [$0E85, $0E86];
   
   IronColor = $0000;
   IronCount = $20;
@@ -26,11 +26,18 @@ var
 
   
 function CheckMiningTool: Boolean;
+var
+  CurTool: Ingeger;
+  Tool: Cardinal;
 begin
   CheckLag(LagWait);
-  FindType(MiningType, Backpack);
-  if GetType(MiningTool) <> MiningType then MiningTool := FindItem;
-  Result := FindCount > 0;
+  for CurTool := 0 to Length(MiningType) -1 do begin
+     Tool = MiningTypes[CurTool];
+     FindType(Tool, Backpack);
+     MiningTool := FindItem;
+     Result := FindCount > 0;
+     break;
+  end
 end;
 
 procedure SmellOre;
