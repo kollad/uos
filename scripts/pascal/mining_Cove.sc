@@ -9,8 +9,6 @@ const
   IngotsStorage = $4003EC5A;
   IngotsType = $1BF2;
   
-  MiningTypes = [$0E85, $0E86];
-  
   IronColor = $0000;
   IronCount = $20;
   
@@ -21,6 +19,7 @@ const
 var
   Terminated: Boolean;
   OreTypes: array of Word;
+  MiningTypes: array of Word;
   //GemTypes: array of Word;
   MiningTool: Cardinal;
 
@@ -331,6 +330,7 @@ begin
 
   //RuneBooks := [$40050CAF, $40053D22, $4004E5A6];
   OreTypes := [$19B7, $19B8, $19B9, $19BA];
+  MiningTypes := [$0E85, $0E86];
   //OreTypes := [$19B9];
   
   SetEventProc(evIncomingGump, '');
