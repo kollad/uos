@@ -26,7 +26,7 @@ var
   
 function CheckMiningTool: Boolean;
 var
-  CurTool: Ingeger;
+  CurTool: Integer;
   Tool: Cardinal;
 begin
   CheckLag(LagWait);
