@@ -30,7 +30,7 @@ var
   Tool: Cardinal;
 begin
   CheckLag(LagWait);
-  if ObjAtLayer(LhandLayer) then Disarm();
+  if ObjAtLayer(LhandLayer) then Disarm;
   for CurTool := 0 to Length(MiningTypes) -1 do begin
      FindType(MiningTypes[CurTool], Backpack);
      if FindCount > 0 then begin
