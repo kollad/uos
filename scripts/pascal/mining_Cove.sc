@@ -196,7 +196,7 @@ end;
 
 procedure CheckState;
 begin
-  if 1600 < Weight + 60 then begin
+  if 1300 < Weight + 60 then begin
     while True do begin
       if Dead or not Connected then Exit;
       if GoBase() then Break;
