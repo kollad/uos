@@ -52,8 +52,10 @@ MINE_POINTS = [[2431, 903],
                [2448, 899],
                [2447, 903],
                [2443, 906]]
+               
 SESSION_DROP_COUNT = {}
 
+# TODO: add ore names by color
 ORE_NAMES = {}
 
 logging.basicConfig(filename='mining.log', level=logging.DEBUG)
@@ -80,7 +82,7 @@ def check_mining_tool():
             break
         else:
             continue
-
+    return mining_tool is not None
 
 def drop_ore():
     print 'Dropping ORE...'
