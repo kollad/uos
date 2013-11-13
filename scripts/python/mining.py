@@ -52,11 +52,24 @@ MINE_POINTS = [[2431, 903],
                [2448, 899],
                [2447, 903],
                [2443, 906]]
-               
+
 SESSION_DROP_COUNT = {}
 
 # TODO: add ore names by color
-ORE_NAMES = {}
+ORE_COLORS = {
+    0x0AAE: 'Elemental',
+    0x043A: 'Lava',
+    0x0AAF: 'Dark Crystal',
+    0x0A9F: 'Platinum',
+    0x0AA0: 'Meteor',
+    0x0445: 'Gold',
+    0x0AA3: 'Black Steel',
+    0x042D: 'Silver',
+    0x042C: 'Steel',
+    0x0488: 'Bronze',
+    0x0AB2: 'Copper',
+    0x0000: 'Iron'
+}
 
 logging.basicConfig(filename='mining.log', level=logging.DEBUG)
 log = logging.getLogger('mining')
@@ -84,7 +97,9 @@ def check_mining_tool():
             continue
     return mining_tool is not None
 
+
 def drop_ore():
+    global SESSION_DROP_COUNT
     print 'Dropping ORE...'
     for ore in ORE_TYPES:
         SESSION_DROP_COUNT.setdefault(ore, 0)
@@ -97,11 +112,10 @@ def drop_ore():
                 MoveItem(item, quantity, INGOTS_STORAGE, 0xFFFF, 0xFFFF, 0)
                 Wait(WAIT_TIME)
                 print 'Dropped {quantity} x {color_name}'.format(quantity, ORE_NAMES[ore])
-                global SESSION_DROP_COUNT
                 SESSION_DROP_COUNT[ore] += quantity
     print 'Dropped.'
     log.info('Total drops by session: ' % '|'.join(
-        ['{}:{}'.format(ore, quantity) for ORE_NAMES[ore], quantity in SESSION_DROP_COUNT.iteritems()])
+        ['{}: {}'.format(ORE_COLORS[ore], quantity) for ore, quantity in SESSION_DROP_COUNT.iteritems()])
     )
 
 
@@ -136,7 +150,7 @@ def check_state():
 
 def mine(x, y, position_x, position_y):
     found = False
-    static_data = ReadStaticsXY(x, y, WorldNum)
+    static_data = ReadStaticsXY(x, y, WorldNum())
     for i in static_data.StaticCount():
         if i >= static_data.StaticCount():
             break
