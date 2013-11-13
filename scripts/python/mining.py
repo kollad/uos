@@ -1,7 +1,9 @@
-# -*- coding: mbcs -*-
+
 from stealth import *
-from checksave import CheckSave
-from checkdead import CheckDead
+from checksave import ChechSave
+from chechdead import CheckDead
+from time import sleep
+from datetime import timedelta, datetime as dt
 import logging
 import time
 
@@ -76,7 +78,6 @@ log = logging.getLogger('mining')
 
 mining_tool = None
 
-
 def _check():
     CheckSave()
     CheckDead()
@@ -94,7 +95,7 @@ def check_mining_tool():
             mining_tool = FindItem()
             break
         else:
-            continue
+            continue   
     return mining_tool is not None
 
 
@@ -149,20 +150,19 @@ def check_state():
 
 
 def mine(x, y, position_x, position_y):
+    tile = None
     found = False
-    static_data = ReadStaticsXY(x, y, WorldNum())
-    for i in static_data.StaticCount():
-        if i >= static_data.StaticCount():
-            break
-        if GetTileFlags(2, static_data.Statics[i].Tile() and 0x200) == 0x200:
-            tile = static_data.Statics[i].Tile()
-            z = static_data.Statics[i].Z()
+    static_data = ReadStaticsXY(x, y, WorldNum())  
+    for t in static_data:
+        if (GetTileFlags(2, t.Tile) and 0x200) == 0x200:
+            z = t.Z  
+            tile = t
             found = True
             break
 
     check_state()
 
-    while found:
+    if tile:
         CheckDead()
         if TargetPresent():
             CancelTarget()
@@ -179,48 +179,45 @@ def mine(x, y, position_x, position_y):
             if TargetPresent():
                 if not position_x == GetX(Self()) or not position_y == GetY(Self()):
                     go(position_x, position_y)
-                start_time = time.time()
-                TargetToTile(tile, x, y, z)
+                start_time = dt.now()
+                TargetToTile(tile.Tile, x, y, z)
                 found = False
-
                 idle_count = 0
-
+                
                 while not found:
                     CheckLag(LAG_WAIT)
-
                     if idle_count >= 15:
                         found = True
-
-                    if InJournalBetweenTimes(
-                            'Try mining elsewhere|You cannot mine|nothing here to mine|Iron Ore|Copper Ore|Bronze Ore',
-                            start_time, time.time()) > 0:
+                    now = dt.now()    
+                    if InJournalBetweenTimes('Try mining elsewhere|You cannot mine|nothing here to mine|Iron Ore|Copper Ore|Bronze Ore',                       start_time, now) > 0: 
                         empty = True
                         found = True
-
-                    if InJournalBetweenTimes('You put|You loosen some rocks', start_time, time.time()) > 0:
+                    elif InJournalBetweenTimes('You put|You loosen some rocks', start_time, now) > 0:
                         found = True
-
-                    if not found:
+                    else: 
                         Wait(WAIT_TIME)
-
-                    idle_count += 1
-
+                        idle_count += 1
         check_state()
+    return True
 
 
 def mine_point(position_x, position_y):
     if not position_x == GetX(Self()) or not position_y == GetY(Self()):
-        print 'Moving to target location'
         go(position_x, position_y)
 
     print 'At mining location. Starting mining...'
 
     x = GetX(Self())
     y = GetY(Self())
-
-    for _x in xrange(-1, 1):
-        for _y in xrange(-1, 1):
-            mine(x + _x, y + _y, position_x, position_y)
+                         
+    mine(x + 1, y, position_x, position_y)
+    mine(x + 1, y + 1, position_x, position_y)
+    mine(x, y + 1, position_x, position_y)
+    mine(x - 1, y + 1, position_x, position_y)
+    mine(x - 1, y, position_x, position_y)
+    mine(x - 1, y - 1, position_x, position_y)
+    mine(x, y - 1, position_x, position_y)
+    mine(x + 1, y - 1, position_x, position_y)
 
     print 'Current spot finished.'
 
@@ -236,5 +233,4 @@ while True:
 
         for point in MINE_POINTS:
             mine_point(point[0], point[1])
-
 
