@@ -136,7 +136,6 @@ def check_state():
 
 def mine(x, y, position_x, position_y):
     found = False
-    iron = False
     static_data = ReadStaticsXY(x, y, WorldNum)
     for i in static_data.StaticCount():
         if i >= static_data.StaticCount():
@@ -207,7 +206,7 @@ def mine_point(position_x, position_y):
 
     for _x in xrange(-1, 1):
         for _y in xrange(-1, 1):
-            mine(x + _x, position_x, position_y)
+            mine(x + _x, y + _y, position_x, position_y)
 
     print 'Current spot finished.'
 
