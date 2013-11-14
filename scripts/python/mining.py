@@ -1,7 +1,7 @@
 
 from stealth import *
-from checksave import ChechSave
-from chechdead import CheckDead
+from checksave import CheckSave
+from checkdead import CheckDead
 from time import sleep
 from datetime import timedelta, datetime as dt
 import logging
@@ -57,7 +57,6 @@ MINE_POINTS = [[2431, 903],
 
 SESSION_DROP_COUNT = {}
 
-# TODO: add ore names by color
 ORE_COLORS = {
     0x0AAE: 'Elemental',
     0x043A: 'Lava',
@@ -77,7 +76,7 @@ logging.basicConfig(filename='mining.log', level=logging.DEBUG)
 log = logging.getLogger('mining')
 
 mining_tool = None
-
+       
 def _check():
     CheckSave()
     CheckDead()
@@ -103,20 +102,23 @@ def drop_ore():
     global SESSION_DROP_COUNT
     print 'Dropping ORE...'
     for ore in ORE_TYPES:
-        SESSION_DROP_COUNT.setdefault(ore, 0)
         _check()
         if FindType(ore, Backpack()):
-            item = FindItem()
-            quantity = GetQuantity(item)
+            item = FindItem()       
+            quantity = GetQuantity(item)  
             if quantity > 0:
                 _check()
-                MoveItem(item, quantity, INGOTS_STORAGE, 0xFFFF, 0xFFFF, 0)
+                MoveItem(item, quantity, STORAGE, 0xFFFF, 0xFFFF, 0)
                 Wait(WAIT_TIME)
-                print 'Dropped {quantity} x {color_name}'.format(quantity, ORE_NAMES[ore])
-                SESSION_DROP_COUNT[ore] += quantity
+                _check()         
+                color = GetColor(item)  
+                SESSION_DROP_COUNT.setdefault(color, 0)
+                print 'Dropped {quantity} x {color_name}'.format(quantity=quantity, color_name=ORE_COLORS[color])
+                SESSION_DROP_COUNT[color] += quantity
+        Wait(WAIT_TIME)
     print 'Dropped.'
-    log.info('Total drops by session: ' % '|'.join(
-        ['{}: {}'.format(ORE_COLORS[ore], quantity) for ore, quantity in SESSION_DROP_COUNT.iteritems()])
+    log.info('Total drops by session: %s' % ' | '.join(
+        ['{o} {q}'.format(o=ORE_COLORS[color], q=quantity or 0) for color, quantity in SESSION_DROP_COUNT.items()])
     )
 
 
@@ -138,7 +140,7 @@ def go_home():
 
 
 def check_state():
-    if 1300 < Weight() + 60:
+    if 1100 < Weight() + 60:
         while True:
             CheckDead()
             if go_home():
