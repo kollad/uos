@@ -104,17 +104,16 @@ def drop_ore():
     for ore in ORE_TYPES:
         _check()
         if FindType(ore, Backpack()):
-            item = FindItem()       
-            quantity = GetQuantity(item)  
-            if quantity > 0:
-                _check()
-                MoveItem(item, quantity, STORAGE, 0xFFFF, 0xFFFF, 0)
-                Wait(WAIT_TIME)
-                _check()         
-                color = GetColor(item)  
-                SESSION_DROP_COUNT.setdefault(color, 0)
-                print 'Dropped {quantity} x {color_name}'.format(quantity=quantity, color_name=ORE_COLORS[color])
-                SESSION_DROP_COUNT[color] += quantity
+            for item in GetFindedList():
+                quantity = GetQuantity(item)  
+                if quantity > 0:
+                    _check()
+                    MoveItem(item, quantity, STORAGE, 0xFFFF, 0xFFFF, 0)
+                    Wait(WAIT_TIME)
+                    color = GetColor(item)  
+                    SESSION_DROP_COUNT.setdefault(color, 0)
+                    print 'Dropped {quantity} x {color_name}'.format(quantity=quantity, color_name=ORE_COLORS[color])
+                    SESSION_DROP_COUNT[color] += quantity
         Wait(WAIT_TIME)
     print 'Dropped.'
     log.info('Total drops by session: %s' % ' | '.join(
