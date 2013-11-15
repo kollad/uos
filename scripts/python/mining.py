@@ -83,7 +83,7 @@ def _check():
 
 
 def check_mining_tool():
-    global mining_tool
+    mining_tool = None
     _check()
     if ObjAtLayer(LhandLayer()):
         Disarm()
@@ -95,7 +95,7 @@ def check_mining_tool():
         else:
             mining_tool = None
             continue   
-    return mining_tool is not None
+    return mining_tool
 
 
 def drop_ore():
@@ -176,7 +176,7 @@ def mine(x, y, position_x, position_y):
 
         while not empty:
             Wait(WAIT_TIME)
-            UseObject(mining_tool)
+            UseObject(check_mining_tool())
             CheckLag(LAG_WAIT)
             WaitForTarget(WAIT_TIME)
             if TargetPresent():
