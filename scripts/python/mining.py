@@ -1,4 +1,3 @@
-
 from stealth import *
 from checksave import CheckSave
 from checkdead import CheckDead
@@ -84,16 +83,17 @@ def _check():
 
 
 def check_mining_tool():
+    global mining_tool
     _check()
-    if ObjAtLayer(0x01):
+    if ObjAtLayer(LhandLayer()):
         Disarm()
     for tool in MINING_TOOLS:
         FindType(tool, Backpack())
         if FindCount():
-            global mining_tool
             mining_tool = FindItem()
             break
         else:
+            mining_tool = None
             continue   
     return mining_tool is not None
 
@@ -170,6 +170,7 @@ def mine(x, y, position_x, position_y):
             CancelTarget()
         while not check_mining_tool():
             CheckDead()
+            Wait(WAIT_TIME)
 
         empty = False
 
