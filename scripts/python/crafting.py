@@ -25,8 +25,7 @@ ORE_COLORS = {
     'low': []
 }
 
-ORE_TO_SMELT = 50
-INGOTS_COUNT = 50
+INGOTS_COUNT = 500
 WAIT_TIME = 1000
 LAG_WAIT = 15000
 REQUIRED_INGOTS = 25 # Minimum ingots required for craft (Scimitar)
