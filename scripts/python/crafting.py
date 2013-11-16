@@ -11,7 +11,7 @@ STORAGES = {
     'all': 0x4009DD1B,  # Storage where all ore and probably ingots are
     'high': 0x400A3E0A, # Storage with High ores. Start from Black Steel and higher
     'low': 0x4009EBEE,  # Storage with low ores
-    'crafted': 0x4009DD42  # Storage where crafted items will be stored
+    'crafted': 0x4006605F  # Storage where crafted items will be stored
 }
 
 ORE_TYPES = [0x19B7, 0x19B8, 0x19B9, 0x19BA]
@@ -25,11 +25,13 @@ ORE_COLORS = {
     'low': []
 }
 
-ORE_TO_SMELT = 750
-INGOTS_COUNT = 500
+ORE_TO_SMELT = 50
+INGOTS_COUNT = 50
 WAIT_TIME = 1000
 LAG_WAIT = 15000
 REQUIRED_INGOTS = 25 # Minimum ingots required for craft (Scimitar)
+
+FORGE_ID = 0x40006325
 
 def _GetIngots():
     CheckSave()
@@ -95,7 +97,8 @@ def _Crafting():
     CheckLag(LAG_WAIT)    
     _Craft(ingots)    
     CheckLag(LAG_WAIT)
-    _DropCrafted()    
+    # _DropCrafted()
+    _SmeltCrafted()
     CheckLag(LAG_WAIT) 
     return True       
                     
@@ -111,9 +114,9 @@ def get_storage(item):
 def _GumpSelect():
     CheckSave()
     CheckDead()
-    WaitGump(5); # First menu (select Swords)
-    WaitGump(102); # Second menu (select Scimitar)
-    WaitGump(1); # Third menu (select Make item)
+    WaitGump(5) # First menu (select Swords)
+    WaitGump(102) # Second menu (select Scimitar)
+    WaitGump(1) # Third menu (select Make item)
     CheckLag(LAG_WAIT)      
     if WaitJournalLine(datetime.now(), 'You put the', 15000):
         CheckSave()
@@ -130,7 +133,19 @@ def _DropCrafted():
     CheckLag(LAG_WAIT)                                                              
     print 'Dropped %s scimitars' % quantity 
     return True
-   
+
+def _SmeltCrafted():
+    print 'Smelting crafted items'
+    CheckSave()
+    CheckDead()
+    if FindType(SCIMITAR_TYPE, Backpack()):
+        for scimitar in GetFindedList():
+            UseObject(Forge)
+            WaitTargetObject(scimitar)
+            Wait(WAIT_TIME)
+            CheckLag(LAG_WAIT)
+    print 'Smelting finished'
+    
 def _DropIngots():
     print 'Dropping any ingots from backpack'
     CheckSave()
