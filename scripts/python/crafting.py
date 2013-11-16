@@ -1,4 +1,3 @@
-
 from stealth import *
 from checksave import CheckSave
 from checkdead import CheckDead
@@ -113,9 +112,9 @@ def get_storage(item):
 def _GumpSelect():
     CheckSave()
     CheckDead()
-    WaitGump(5) # First menu (select Swords)
-    WaitGump(102) # Second menu (select Scimitar)
-    WaitGump(1) # Third menu (select Make item)
+    WaitGump('5') # First menu (select Swords)
+    WaitGump('102') # Second menu (select Scimitar)
+    WaitGump('1') # Third menu (select Make item)
     CheckLag(LAG_WAIT)      
     if WaitJournalLine(datetime.now(), 'You put the', 15000):
         CheckSave()
